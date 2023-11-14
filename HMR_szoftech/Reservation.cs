@@ -12,9 +12,5 @@ namespace HMR_szoftech
         string date;
         string state;
 
-        public void proba()
-        {
-            Console.WriteLine("Test");
-        }
     }
 }

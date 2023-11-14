@@ -10,8 +10,6 @@ namespace HMR_szoftech
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Push proba");
-
             Program obj=new Program();
             obj.begin();
 
