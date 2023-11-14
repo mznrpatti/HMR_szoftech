@@ -55,7 +55,10 @@ namespace HMR_szoftech
             string name=Console.ReadLine();
             Console.Write("Felhasználónév: ");
             string username = Console.ReadLine();
-
+            Console.Write("Személyazonosító igazolvány száma: ");
+            string identitycardnumber = Console.ReadLine();
+            Console.Write("Születési dátum (yyyy/hh/nn): ");
+            string birthdate=Console.ReadLine();
         }
     }
 }
