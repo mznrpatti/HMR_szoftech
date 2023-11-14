@@ -7,16 +7,16 @@ using System.IO;
 
 namespace HMR_szoftech
 {
-    class GuestContainer
+    static class GuestContainer
     {
-        public List<Guest> guestList;
+        static private List<Guest> guestList=new List<Guest>();
 
-        public GuestContainer()
+        static public void addGuest(Guest newGuest)
         {
-            guestList=new List<Guest>();
+            guestList.Add(newGuest);
         }
 
-        public void readDatas()
+        static public void readDatas()
         {
             StreamReader sr = new StreamReader("guestdatas.txt");
             string sor;
@@ -32,6 +32,7 @@ namespace HMR_szoftech
                 newGuest=new Guest(adatok[0], adatok[1], "guest",  adatok[2], new DateTime(year, month, day));
                 guestList.Add(newGuest);
             }
+            sr.Close();
         }
     }
 }
