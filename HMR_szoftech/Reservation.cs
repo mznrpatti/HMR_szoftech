@@ -11,11 +11,5 @@ namespace HMR_szoftech
         private Guest guest;
         string date;
         string state;
-
-        void proba()
-        {
-            Console.Write("______________");
-        }
-        
     }
 }
