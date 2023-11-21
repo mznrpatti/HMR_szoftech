@@ -52,6 +52,7 @@
     <Compile Include="ReservationContainer.cs" />
     <Compile Include="User.cs" />
     <Compile Include="GuestContainer.cs" />
+    <Compile Include="Visitor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

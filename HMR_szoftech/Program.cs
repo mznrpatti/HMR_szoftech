@@ -37,7 +37,7 @@ namespace HMR_szoftech
             {
                 case "1": login(); break;
                 case "2": registration(); break;
-                case "3": Console.WriteLine("harmas"); break;
+                case "3": visitor(); break;
             }
         }
 
@@ -131,7 +131,7 @@ namespace HMR_szoftech
 
         }
 
-        static private void registration()
+        static public void registration()
         {
             Console.Clear();
             Console.WriteLine("Kérjük adja meg a regisztrációhoz szükséges adatait:");
@@ -208,6 +208,30 @@ namespace HMR_szoftech
                 
                 Console.Clear();
                 begin();
+            }
+        }
+
+        static public void visitor()
+        {
+            Console.Clear();
+            Console.WriteLine("Kedves Látogató! Üdvözöljük hotelünk oldalán!");
+            string option;
+            do
+            {
+                Console.WriteLine("Kérlek válasszon a lehetőségek közül (1/2/3):");
+                Console.WriteLine("1. Alapadatok megtekintése");
+                Console.WriteLine("2. Elérhető csomagok listázása");
+                Console.WriteLine("3. Regisztráció");
+                Console.WriteLine("4. Vissza a főmenübe");
+                option = Convert.ToString(Console.ReadLine());
+
+            } while (option != "1" && option != "2" && option != "3" && option != "4");
+            switch (option)
+            {
+                case "1": Visitor.showBasicDatas(); break;
+                case "2": PackageContainer.listPackages(); Console.Write("Nyomja meg az <Enter>-t a visszalépéshez!"); while (Console.ReadKey().Key != ConsoleKey.Enter) { }; visitor(); break;
+                case "3": Visitor.registration(); break;
+                case "4": begin();break;
             }
         }
     }
