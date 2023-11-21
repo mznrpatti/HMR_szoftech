@@ -30,5 +30,37 @@ namespace HMR_szoftech
             sw.Close();
             output.Close();
         }
+
+        public void guestMenu()
+        {
+            Console.WriteLine($"{0} üdvözlünk a hotel oldalán!", this.getName());
+            string option;
+            do
+            {
+                Console.WriteLine("Kérlek válassz a lehetőségek közül (1/2/3/4/5/6):");
+                Console.WriteLine("1. Elérhető csomagok listázása");
+                Console.WriteLine("2. Foglalás");
+                Console.WriteLine("3. Saját foglalások kilistázása");
+                Console.WriteLine("4. Foglalás törlése");
+                Console.WriteLine("5. Alapadatok megtekintése");
+                Console.WriteLine("6. Kijelentkezés");
+                option = Convert.ToString(Console.ReadLine());
+
+            } while (option != "1" && option != "2" && option != "3" && option != "4" && option != "5" && option != "6");
+            switch (option)
+            {
+                case "1": login(); break;
+                case "2": registration(); break;
+                case "3": Console.WriteLine("harmas"); break;
+                case "4": registration(); break;
+                case "5": registration(); break;
+                case "6": registration(); break;
+            }
+        }
+
+        public void login()
+        {
+
+        }
     }
 }

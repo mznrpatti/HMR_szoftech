@@ -16,6 +16,16 @@ namespace HMR_szoftech
             guestList.Add(newGuest);
         }
 
+        static public Guest getGuest(int idx)
+        {
+            return guestList[idx];
+        }
+
+        static public int numberOfGuests()
+        {
+            return guestList.Count;
+        }
+
         static public void readDatas()
         {
             StreamReader sr = new StreamReader("guestdatas.txt");

@@ -46,6 +46,68 @@ namespace HMR_szoftech
             string userName=Console.ReadLine();
             Console.Write("Jelszó: ");
             string password = Console.ReadLine();
+            if (userName == "admin")
+            {
+                StreamReader sr = new StreamReader("adminlogin.txt");
+                if (password == sr.ReadLine())
+                    Console.WriteLine("Igen jó jelszó!");
+                else
+                {
+                    Console.Clear();
+                    Console.WriteLine("Helytelen felhasználónév vagy jelszó!");
+                    System.Threading.Thread.Sleep(3000);
+                    login();
+                }
+                sr.Close();
+            }
+            else if (userName == "recepcionist")
+            {
+                StreamReader sr = new StreamReader("recepcionistlogin.txt");
+                if (password == sr.ReadLine())
+                    Console.WriteLine("Igen jó jelszó!");
+                else
+                {
+                    Console.Clear();
+                    Console.WriteLine("Helytelen felhasználónév vagy jelszó!");
+                    System.Threading.Thread.Sleep(3000);
+                    login();
+                }
+                sr.Close();
+            }
+            else
+            {
+                
+                for (int i=0;i<GuestContainer.numberOfGuests(); i++)
+                {
+                    if (GuestContainer.getGuest(i).getUserName() == userName)
+                    {
+                        
+                        StreamReader sr = new StreamReader("logindatas.txt");
+                        bool success = false;
+                        while (!sr.EndOfStream)
+                        {
+                            string[] logindatas = (sr.ReadLine()).Split(';');
+                            if (logindatas[1] == password)
+                            {
+                                success = true;
+                                break;
+                            }
+                        }
+                        sr.Close();
+                        if (success)
+                        {
+                            Console.WriteLine("Jó jelszó!");
+                        }
+                        else
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Helytelen felhasználónév vagy jelszó!");
+                            System.Threading.Thread.Sleep(3000);
+                            login();
+                        }
+                    }
+                }
+            }
         }
 
         bool birthDateChecker(DateTime birthdate)
@@ -121,13 +183,19 @@ namespace HMR_szoftech
                 sw.WriteLine(outputString);
                 sw.Close();
                 output.Close();
+                Console.Clear();
+                Console.WriteLine("Sikeres regisztráció!");
+                Console.Write("Nyomja meg az <Enter>-t a továbblépéshez!");
+                while (Console.ReadKey().Key != ConsoleKey.Enter) { };
+                Console.Clear();
+                begin();
             }
             else
             {
                 Console.Clear();
                 Console.WriteLine("Sikertelen regisztráció! Nem töltötte be a 18. életévét!");
                 Console.Write("Nyomja meg az <Enter>-t a továbblépéshez!");
-                while (Console.ReadKey().Key != ConsoleKey.Enter) {};
+                
                 Console.Clear();
                 begin();
             }
