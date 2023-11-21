@@ -44,5 +44,15 @@ namespace HMR_szoftech
             }
             sr.Close();
         }
+
+        static public Guest getGuestByID(string identity)
+        {
+            Guest find=null;
+            foreach (Guest guest in guestList)
+            {
+                if (guest.getIdentityCardNumber() == identity) find=guest;
+            }
+            return find;
+        }
     }
 }

@@ -7,19 +7,21 @@ using System.IO;
 
 namespace HMR_szoftech
 {
-    class Program
+    static class Program
     {
         static void Main(string[] args)
         {
             GuestContainer.readDatas();
-            Program obj=new Program();
-            obj.begin();
+            PackageContainer.readDatas();
+            ReservationContainer.readDatas();
+            begin();
 
             Console.ReadKey();
         }
 
-        void begin()
+        static public void begin()
         {
+            Console.Clear();
             Console.WriteLine("Üdvözöllek a Hotel oldalán!");
             string option;
             do
@@ -39,7 +41,7 @@ namespace HMR_szoftech
             }
         }
 
-        void login()
+        static private void login()
         {
             Console.Clear();
             Console.Write("Felhasználónév: ");
@@ -76,7 +78,7 @@ namespace HMR_szoftech
             }
             else
             {
-                
+                bool log = false;
                 for (int i=0;i<GuestContainer.numberOfGuests(); i++)
                 {
                     if (GuestContainer.getGuest(i).getUserName() == userName)
@@ -96,7 +98,8 @@ namespace HMR_szoftech
                         sr.Close();
                         if (success)
                         {
-                            Console.WriteLine("Jó jelszó!");
+                            log=true;
+                            GuestContainer.getGuest(i).login();
                         }
                         else
                         {
@@ -107,10 +110,17 @@ namespace HMR_szoftech
                         }
                     }
                 }
+                if (!log)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Helytelen felhasználónév vagy jelszó!");
+                    System.Threading.Thread.Sleep(3000);
+                    login();
+                }
             }
         }
 
-        bool birthDateChecker(DateTime birthdate)
+        static private bool birthDateChecker(DateTime birthdate)
         {
             DateTime current = DateTime.Now;
             if (birthdate.Year < current.Year - 18 || (birthdate.Year == current.Year - 18 && birthdate.Month < current.Month) || (birthdate.Year == current.Year - 18 && birthdate.Month == current.Month && birthdate.Day <= current.Day))
@@ -121,7 +131,7 @@ namespace HMR_szoftech
 
         }
 
-        void registration()
+        static private void registration()
         {
             Console.Clear();
             Console.WriteLine("Kérjük adja meg a regisztrációhoz szükséges adatait:");

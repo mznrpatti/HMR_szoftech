@@ -9,13 +9,13 @@ namespace HMR_szoftech
 {
     class Guest: User
     {
-        private string identityCardNummber;
+        private string identityCardNumber;
         private List<Reservation> reservations;
         private DateTime birthDate;
 
         public Guest(string userName, string name, string rank, string identityCardNumber, DateTime birthDate): base(userName, name, rank)
         {
-            this.identityCardNummber = identityCardNumber;
+            this.identityCardNumber = identityCardNumber;
             this.birthDate = birthDate;
             reservations = new List<Reservation>();
         }
@@ -25,7 +25,7 @@ namespace HMR_szoftech
             GuestContainer.addGuest(this);
             FileStream output = new FileStream("guestdatas.txt", FileMode.Append);
             StreamWriter sw = new StreamWriter(output);
-            string outputRow = this.getUserName() + ";" + this.getName() + ";" + this.identityCardNummber + ";" + Convert.ToString(this.birthDate.Year) + ";" + Convert.ToString(this.birthDate.Month) + ";" + Convert.ToString(this.birthDate.Day);
+            string outputRow = this.getUserName() + ";" + this.getName() + ";" + this.identityCardNumber + ";" + Convert.ToString(this.birthDate.Year) + ";" + Convert.ToString(this.birthDate.Month) + ";" + Convert.ToString(this.birthDate.Day);
             sw.WriteLine(outputRow);
             sw.Close();
             output.Close();
@@ -33,7 +33,8 @@ namespace HMR_szoftech
 
         public void guestMenu()
         {
-            Console.WriteLine($"{0} üdvözlünk a hotel oldalán!", this.getName());
+            Console.Clear();
+            Console.WriteLine($"{this.getName()} üdvözlünk a hotel oldalán!");
             string option;
             do
             {
@@ -49,18 +50,129 @@ namespace HMR_szoftech
             } while (option != "1" && option != "2" && option != "3" && option != "4" && option != "5" && option != "6");
             switch (option)
             {
-                case "1": login(); break;
-                case "2": registration(); break;
-                case "3": Console.WriteLine("harmas"); break;
-                case "4": registration(); break;
-                case "5": registration(); break;
-                case "6": registration(); break;
+                case "1": PackageContainer.listPackages(); back(); break;
+                case "2": reserve(); break;
+                case "3": listOwnReservations(); back(); break;
+                case "4": deleteReservation(); break;
+                case "5": showBasicDatas(); back(); break;
+                case "6": logout(); break;
             }
         }
 
         public void login()
         {
+            guestMenu();
+        }
 
+        public void logout()
+        {
+            Console.Clear();
+            Console.WriteLine("Várjuk vissza!");
+            System.Threading.Thread.Sleep(3000);
+            Program.begin();
+        }
+
+        private void back()
+        {
+            Console.Write("Nyomja meg az <Enter>-t a visszalépéshez!");
+            while (Console.ReadKey().Key != ConsoleKey.Enter) { };
+            Console.Clear();
+            guestMenu();
+        }
+
+        public void reserve()
+        {
+            Console.WriteLine("Üdvözöljük foglalási felületünkön!");
+            PackageContainer.listPackages();
+            Console.WriteLine($"Kérjük adja meg a foglalni kívánt csomag számát: {1}-{PackageContainer.numberOfPackages()}");
+            int option=0;
+            do
+            {
+                option = Convert.ToInt32(Console.ReadLine());
+            } while (!(option >= 1 && option <= PackageContainer.numberOfPackages()));
+            string date = Convert.ToString(PackageContainer.getPackage(option-1).getEndDate()+"-"+ PackageContainer.getPackage(option - 1).getStartDate());
+            Reservation newReservation = new Reservation(PackageContainer.getPackage(option - 1), this, date);
+            ReservationContainer.addReservation(newReservation);
+            this.reservations.Add(newReservation);
+
+            FileStream output = new FileStream("reservations.txt", FileMode.Append);
+            StreamWriter sw=new StreamWriter(output);
+            string sor = Convert.ToString(this.identityCardNumber+";"+ PackageContainer.getPackage(option - 1).getRoomType())+";"+ PackageContainer.getPackage(option - 1).getNumberOfGuests()+";"+ PackageContainer.getPackage(option - 1).getPackagePrice()+";"+ PackageContainer.getPackage(option - 1).getStartDate()+";"+ PackageContainer.getPackage(option - 1).getEndDate();
+            sw.WriteLine(sor);
+            sw.Close();
+            output.Close();
+            PackageContainer.deletePackage(option - 1);
+            Console.Clear();
+            Console.WriteLine("Sikeres foglalás!");
+            System.Threading.Thread.Sleep(3000);
+            guestMenu();
+        }
+
+        public string getIdentityCardNumber()
+        {
+            return identityCardNumber;
+        }
+
+        public void listOwnReservations()
+        {
+            Console.Clear();
+            bool reservation = false;
+            int db = 1;
+            Console.WriteLine("Az Ön foglalásai: ");
+            for(int i = 0; i < ReservationContainer.numberOfReservations(); i++)
+            {
+                if (ReservationContainer.getReservation(i).getGuest().getIdentityCardNumber() == this.identityCardNumber)
+                {
+                    Console.Write($"{db}.: ");
+                    ReservationContainer.getReservation(i).printDatas();
+                    reservation = true;
+                    db++;
+                }
+            }
+
+            if (!reservation)
+                Console.WriteLine("Önnek nincs foglalása!");
+        }
+
+        public int getNumberOfOwnReservations()
+        {
+            int db = 0;
+            for (int i = 0; i < ReservationContainer.numberOfReservations(); i++)
+            {
+                if (ReservationContainer.getReservation(i).getGuest().getIdentityCardNumber() == this.identityCardNumber)
+                    db++;
+            }
+            return db;
+        }
+
+        public void deleteReservation()
+        {
+            if (getNumberOfOwnReservations() > 0)
+            {
+                this.listOwnReservations();
+                Console.Write("Kérjük adja meg a törölni kívánt foglalás számát: ");
+                int option = 0;
+                do
+                {
+                    option = Convert.ToInt32(Console.ReadLine());
+                } while (!(option >= 1 && option <= getNumberOfOwnReservations()));
+                Package newPackage = ReservationContainer.getPackageFromReservation(option-1);
+                PackageContainer.addPackage(newPackage);
+                PackageContainer.writePackages();
+                ReservationContainer.deleteReservation(option - 1);
+                ReservationContainer.writeReservations();
+                Console.Clear();
+                Console.WriteLine("Foglalás sikeresen törölve!");
+                System.Threading.Thread.Sleep(3000);
+                guestMenu();
+            }
+            else
+            {
+                Console.WriteLine("Önnek nincs foglalása, amit törölhetne!");
+            }
+            
+
+            Console.ReadKey();
         }
     }
 }

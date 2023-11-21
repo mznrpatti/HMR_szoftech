@@ -44,9 +44,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Guest.cs" />
+    <Compile Include="Package.cs" />
+    <Compile Include="PackageContainer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reservation.cs" />
+    <Compile Include="ReservationContainer.cs" />
     <Compile Include="User.cs" />
     <Compile Include="GuestContainer.cs" />
   </ItemGroup>

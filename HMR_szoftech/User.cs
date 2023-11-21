@@ -21,6 +21,7 @@ namespace HMR_szoftech
 
         public void showBasicDatas()
         {
+            Console.Clear();
             Console.WriteLine("Ezek az alapadatok!");
         }
 
