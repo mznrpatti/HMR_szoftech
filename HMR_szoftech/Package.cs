@@ -33,5 +33,10 @@ namespace HMR_szoftech
 
         public string getEndDate() { return endDate; }  
 
+        public void printPackageDatas()
+        {
+            Console.WriteLine($"szoba típusa: {roomType}, vendégek száma: {numberOfGuests}, csomag ára: {packagePrice}, dátum: {startDate}-{endDate}");
+        }
+
     }
 }

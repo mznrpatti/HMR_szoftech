@@ -11,6 +11,27 @@ namespace HMR_szoftech
     {
         static private List<Package> packageList = new List<Package>();
 
+        public static int numberOfPackages()
+        {
+            return packageList.Count();
+        }
+
+        public static Package getPackage(int idx)
+        {
+            return packageList[idx];
+        }
+
+        public static void addPackage(Package newPackage)
+        {
+            packageList.Add(newPackage);
+        }
+
+        public static void deletePackage(int idx)
+        {
+            packageList.RemoveAt(idx);
+            writePackages();
+        }
+
         static public void readDatas()
         {
             StreamReader sr = new StreamReader("packagedatas.txt");
@@ -32,13 +53,25 @@ namespace HMR_szoftech
             sr.Close();
         }
 
+        public static void writePackages()
+        {
+            StreamWriter sw = new StreamWriter("packagedatas.txt");
+            for (int i = 0; i < packageList.Count; i++)
+            {
+                string sor = Convert.ToString(packageList[i].getRoomType() + ";" + packageList[i].getNumberOfGuests() + ";" + packageList[i].getPackagePrice() + ";" + packageList[i].getStartDate() + ";" + packageList[i].getEndDate());
+                sw.WriteLine(sor);
+            }
+            sw.Close();
+        }
+
         public static void listPackages()
         {
             Console.Clear();
             Console.WriteLine("Elérhető csomagjaink: ");
             for (int i = 0; i < packageList.Count; i++)
             {
-                Console.WriteLine($"{i+1}.: szoba típusa: {packageList[i].getRoomType()}, vendégek száma: {packageList[i].getNumberOfGuests()}, csomagár: {packageList[i].getPackagePrice()}, dátum: {packageList[i].getStartDate()}-{packageList[i].getEndDate()}");
+                Console.Write($"{i+1}.: ");
+                packageList[i].printPackageDatas();
             }
             Console.Write("Szeretne szűrni szobatípusra (igen/nem)? ");
             string filterRoom = Console.ReadLine();
@@ -65,7 +98,8 @@ namespace HMR_szoftech
                 {
                     if (packageList[i].getRoomType()==filterRoomType && roomDate == filterDateValue)
                     {
-                        Console.WriteLine($"{i + 1}.: szoba típusa: {packageList[i].getRoomType()}, vendégek száma: {packageList[i].getNumberOfGuests()}, csomagár: {packageList[i].getPackagePrice()}, dátum: {packageList[i].getStartDate()}-{packageList[i].getEndDate()}");
+                        Console.Write($"{i + 1}.: ");
+                        packageList[i].printPackageDatas();
                         listFlag = true;
                     }
                 }
@@ -73,7 +107,8 @@ namespace HMR_szoftech
                 {
                     if (packageList[i].getRoomType() == filterRoomType)
                     {
-                        Console.WriteLine($"{i + 1}.: szoba típusa: {packageList[i].getRoomType()}, vendégek száma: {packageList[i].getNumberOfGuests()}, csomagár: {packageList[i].getPackagePrice()}, dátum: {packageList[i].getStartDate()}-{packageList[i].getEndDate()}");
+                        Console.Write($"{i + 1}.: ");
+                        packageList[i].printPackageDatas();
                         listFlag = true;
                     }
                 }
@@ -82,7 +117,8 @@ namespace HMR_szoftech
                 {
                     if (roomDate == filterDateValue)
                     {
-                        Console.WriteLine($"{i + 1}.: szoba típusa: {packageList[i].getRoomType()}, vendégek száma: {packageList[i].getNumberOfGuests()}, csomagár: {packageList[i].getPackagePrice()}, dátum: {packageList[i].getStartDate()}-{packageList[i].getEndDate()}");
+                        Console.Write($"{i + 1}.: ");
+                        packageList[i].printPackageDatas();
                         listFlag = true;
                     }
                 }
@@ -92,38 +128,6 @@ namespace HMR_szoftech
             {
                 Console.WriteLine("Sajnáljuk, de nincs a keresésnek megfelelő csomag!");
             }
-        }
-
-        public static int numberOfPackages()
-        {
-            return packageList.Count();
-        }
-
-        public static Package getPackage(int idx)
-        {
-            return packageList[idx];
-        }
-
-        public static void deletePackage(int idx)
-        {
-            packageList.RemoveAt(idx);
-            writePackages();
-        }
-
-        public static void writePackages()
-        {
-            StreamWriter sw=new StreamWriter("packagedatas.txt");
-            for(int i=0;i<packageList.Count; i++)
-            {
-                string sor = Convert.ToString(packageList[i].getRoomType() + ";" + packageList[i].getNumberOfGuests() + ";" + packageList[i].getPackagePrice() + ";" + packageList[i].getStartDate() + ";" + packageList[i].getEndDate());
-                sw.WriteLine(sor);
-            }
-            sw.Close();
-        }
-
-        public static void addPackage(Package newPackage)
-        {
-            packageList.Add(newPackage);
         }
     }
 }

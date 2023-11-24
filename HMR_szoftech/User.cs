@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HMR_szoftech
 {
-    internal class User
+    abstract class User
     {
         private string userName;
         private string name;
@@ -25,14 +25,14 @@ namespace HMR_szoftech
             Console.WriteLine("Ezek az alapadatok!");
         }
 
-        public void login()
-        {
-            //TODO
-        }
+        public void login() {}
 
         public void logout()
         {
-            //TODO
+            Console.Clear();
+            Console.WriteLine("Várjuk vissza!");
+            System.Threading.Thread.Sleep(3000);
+            Program.begin();
         }
 
         public string getUserName()

@@ -11,9 +11,29 @@ namespace HMR_szoftech
     {
         static private List<Reservation> reservationList=new List<Reservation>();
 
+        static public Reservation getReservation(int idx)
+        {
+            return reservationList[idx];
+        }
+
+        static public Package getPackageFromReservation(int idx)
+        {
+            return reservationList[idx].getPackage();
+        }
+
+        static public int numberOfReservations()
+        {
+            return reservationList.Count;
+        }
+
         static public void addReservation(Reservation newReservation)
         {
             reservationList.Add(newReservation);
+        }
+
+        static public void deleteReservation(int idx)
+        {
+            reservationList.RemoveAt(idx);
         }
 
         static public void readDatas()
@@ -37,26 +57,6 @@ namespace HMR_szoftech
                 addReservation(new Reservation(newPackage, guest, date));
             }
             sr.Close();
-        }
-
-        static public int numberOfReservations()
-        {
-            return reservationList.Count;
-        }
-
-        static public Package getPackageFromReservation(int idx)
-        {
-            return reservationList[idx].getPackage();
-        }
-
-        static public Reservation getReservation(int idx)
-        {
-            return reservationList[idx];
-        }
-
-        static public void deleteReservation(int idx)
-        {
-            reservationList.RemoveAt(idx);
         }
 
         public static void writeReservations()

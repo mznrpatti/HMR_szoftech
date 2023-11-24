@@ -64,14 +64,6 @@ namespace HMR_szoftech
             guestMenu();
         }
 
-        public void logout()
-        {
-            Console.Clear();
-            Console.WriteLine("Várjuk vissza!");
-            System.Threading.Thread.Sleep(3000);
-            Program.begin();
-        }
-
         private void back()
         {
             Console.Write("Nyomja meg az <Enter>-t a visszalépéshez!");

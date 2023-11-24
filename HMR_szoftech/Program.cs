@@ -9,6 +9,10 @@ namespace HMR_szoftech
 {
     static class Program
     {
+
+        static private Recepcionist recepcionist = new Recepcionist("recepcionist", "Recepció Szolgálat", "recepcionist");
+        static private Admin admin = new Admin("admin", "Hotel Adminisztráció", "admin");
+
         static void Main(string[] args)
         {
             GuestContainer.readDatas();
@@ -41,7 +45,7 @@ namespace HMR_szoftech
             }
         }
 
-        static private void login()
+        static public void login()
         {
             Console.Clear();
             Console.Write("Felhasználónév: ");
@@ -52,7 +56,7 @@ namespace HMR_szoftech
             {
                 StreamReader sr = new StreamReader("adminlogin.txt");
                 if (password == sr.ReadLine())
-                    Console.WriteLine("Igen jó jelszó!");
+                    admin.login();
                 else
                 {
                     Console.Clear();
@@ -66,7 +70,7 @@ namespace HMR_szoftech
             {
                 StreamReader sr = new StreamReader("recepcionistlogin.txt");
                 if (password == sr.ReadLine())
-                    Console.WriteLine("Igen jó jelszó!");
+                    recepcionist.login();
                 else
                 {
                     Console.Clear();
@@ -218,7 +222,7 @@ namespace HMR_szoftech
             string option;
             do
             {
-                Console.WriteLine("Kérlek válasszon a lehetőségek közül (1/2/3):");
+                Console.WriteLine("Kérlek válasszon a lehetőségek közül (1/2/3/4):");
                 Console.WriteLine("1. Alapadatok megtekintése");
                 Console.WriteLine("2. Elérhető csomagok listázása");
                 Console.WriteLine("3. Regisztráció");
