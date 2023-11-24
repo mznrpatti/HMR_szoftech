@@ -90,22 +90,64 @@ namespace HMR_szoftech
             {
                 option = Convert.ToInt32(Console.ReadLine());
             } while (!(option >= 1 && option <= PackageContainer.numberOfPackages()));
-            string date = Convert.ToString(PackageContainer.getPackage(option-1).getEndDate()+"-"+ PackageContainer.getPackage(option - 1).getStartDate());
-            Reservation newReservation = new Reservation(PackageContainer.getPackage(option - 1), this, date);
-            ReservationContainer.addReservation(newReservation);
-            this.reservations.Add(newReservation);
-
-            FileStream output = new FileStream("reservations.txt", FileMode.Append);
-            StreamWriter sw=new StreamWriter(output);
-            string sor = Convert.ToString(this.identityCardNumber+";"+ PackageContainer.getPackage(option - 1).getRoomType())+";"+ PackageContainer.getPackage(option - 1).getNumberOfGuests()+";"+ PackageContainer.getPackage(option - 1).getPackagePrice()+";"+ PackageContainer.getPackage(option - 1).getStartDate()+";"+ PackageContainer.getPackage(option - 1).getEndDate();
-            sw.WriteLine(sor);
-            sw.Close();
-            output.Close();
-            PackageContainer.deletePackage(option - 1);
             Console.Clear();
-            Console.WriteLine("Sikeres foglalás!");
+            Console.WriteLine("Tovább a fizetésre!");
             System.Threading.Thread.Sleep(3000);
+            Console.Clear();
+            bool successfullPayment = false;
+            int tries = 0;
+            while (successfullPayment == false && tries < 3)
+            {
+                if (pay())
+                {
+                    Console.Clear();
+                    Console.WriteLine("Sikeres fizetés és foglalás!");
+                    System.Threading.Thread.Sleep(3000);
+                    successfullPayment = true;
+                    string date = Convert.ToString(PackageContainer.getPackage(option - 1).getEndDate() + "-" + PackageContainer.getPackage(option - 1).getStartDate());
+                    Reservation newReservation = new Reservation(PackageContainer.getPackage(option - 1), this, date);
+                    ReservationContainer.addReservation(newReservation);
+                    this.reservations.Add(newReservation);
+
+                    FileStream output = new FileStream("reservations.txt", FileMode.Append);
+                    StreamWriter sw = new StreamWriter(output);
+                    string sor = Convert.ToString(this.identityCardNumber + ";" + PackageContainer.getPackage(option - 1).getRoomType()) + ";" + PackageContainer.getPackage(option - 1).getNumberOfGuests() + ";" + PackageContainer.getPackage(option - 1).getPackagePrice() + ";" + PackageContainer.getPackage(option - 1).getStartDate() + ";" + PackageContainer.getPackage(option - 1).getEndDate();
+                    sw.WriteLine(sor);
+                    sw.Close();
+                    output.Close();
+                    PackageContainer.deletePackage(option - 1);
+                    Console.Clear();
+                }
+                else
+                {
+                    Console.WriteLine("Érvénytelen banki adatok, a foglalás sikertelen!");
+                    tries++;
+                }
+            }
+
+            if (tries == 3)
+            {
+                Console.WriteLine("Túl sok sikertelen próbálkozás!");
+                System.Threading.Thread.Sleep(3000);
+            }
+
             guestMenu();
+        }
+
+        public bool pay()
+        {
+            Console.Write("Bankkártyaszám: ");
+            string cardNumber = Console.ReadLine();
+            Console.Write("Bankkártyán szereplő név: ");
+            string nameOnCard = Console.ReadLine();
+            Console.Write("Bankkártya lejárati dátuma: ");
+            string dateOnCard = Console.ReadLine();
+            Console.Write("CVC kód: ");
+            string CVC = Console.ReadLine();
+            if (cardNumber == "1111 2222 3333 4444" && nameOnCard == "Minta Antal" && dateOnCard == "06/26" && CVC == "666")
+                return true;
+            else
+                return false;
         }
 
         public string getIdentityCardNumber()

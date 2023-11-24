@@ -40,6 +40,58 @@ namespace HMR_szoftech
             {
                 Console.WriteLine($"{i+1}.: szoba típusa: {packageList[i].getRoomType()}, vendégek száma: {packageList[i].getNumberOfGuests()}, csomagár: {packageList[i].getPackagePrice()}, dátum: {packageList[i].getStartDate()}-{packageList[i].getEndDate()}");
             }
+            Console.Write("Szeretne szűrni szobatípusra (igen/nem)? ");
+            string filterRoom = Console.ReadLine();
+            string filterRoomType="";
+            if (filterRoom == "igen")
+            {
+                Console.Write("Milyen szobatípusra szeretne szűrni? ");
+                filterRoomType = Console.ReadLine();
+            }
+            Console.Write("Szeretne szűrni dátumra (igen/nem)? ");
+            string filterDate = Console.ReadLine();
+            string filterDateValue="";
+            if (filterDate == "igen")
+            {
+                Console.Write("Milyen dátumra szeretne szűrni (yyyy.mm.dd.-yyyy.mm.dd.)? ");
+                filterDateValue = Console.ReadLine();
+            }
+
+            bool listFlag=false;
+            for (int i = 0; i < packageList.Count; i++)
+            {
+                string roomDate = Convert.ToString(packageList[i].getStartDate() + "-" + packageList[i].getEndDate());
+                if(filterRoom=="igen" && filterDate == "igen")
+                {
+                    if (packageList[i].getRoomType()==filterRoomType && roomDate == filterDateValue)
+                    {
+                        Console.WriteLine($"{i + 1}.: szoba típusa: {packageList[i].getRoomType()}, vendégek száma: {packageList[i].getNumberOfGuests()}, csomagár: {packageList[i].getPackagePrice()}, dátum: {packageList[i].getStartDate()}-{packageList[i].getEndDate()}");
+                        listFlag = true;
+                    }
+                }
+                if(filterRoom=="igen" && filterDate == "nem")
+                {
+                    if (packageList[i].getRoomType() == filterRoomType)
+                    {
+                        Console.WriteLine($"{i + 1}.: szoba típusa: {packageList[i].getRoomType()}, vendégek száma: {packageList[i].getNumberOfGuests()}, csomagár: {packageList[i].getPackagePrice()}, dátum: {packageList[i].getStartDate()}-{packageList[i].getEndDate()}");
+                        listFlag = true;
+                    }
+                }
+
+                if(filterRoom=="nem" && filterDate == "igen")
+                {
+                    if (roomDate == filterDateValue)
+                    {
+                        Console.WriteLine($"{i + 1}.: szoba típusa: {packageList[i].getRoomType()}, vendégek száma: {packageList[i].getNumberOfGuests()}, csomagár: {packageList[i].getPackagePrice()}, dátum: {packageList[i].getStartDate()}-{packageList[i].getEndDate()}");
+                        listFlag = true;
+                    }
+                }
+            }
+
+            if (!listFlag)
+            {
+                Console.WriteLine("Sajnáljuk, de nincs a keresésnek megfelelő csomag!");
+            }
         }
 
         public static int numberOfPackages()
