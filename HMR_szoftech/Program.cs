@@ -11,7 +11,7 @@ namespace HMR_szoftech
     {
 
         static private Recepcionist recepcionist = new Recepcionist("recepcionist", "Recepció Szolgálat", "recepcionist");
-        static private Admin admin = new Admin("admin", "Hotel Adminisztráció", "admin");
+        static private Manager admin = new Manager("admin", "Hotel Adminisztráció", "manager");
 
         static void Main(string[] args)
         {

@@ -43,7 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Admin.cs" />
+    <Compile Include="Manager.cs" />
     <Compile Include="Guest.cs" />
     <Compile Include="Package.cs" />
     <Compile Include="PackageContainer.cs" />

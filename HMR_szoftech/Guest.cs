@@ -76,7 +76,7 @@ namespace HMR_szoftech
         {
             Console.WriteLine("Üdvözöljük foglalási felületünkön!");
             PackageContainer.listPackages();
-            Console.WriteLine($"Kérjük adja meg a foglalni kívánt csomag számát: {1}-{PackageContainer.numberOfPackages()}");
+            Console.Write($"Kérjük adja meg a foglalni kívánt csomag számát: {1}-{PackageContainer.numberOfPackages()}");
             int option=0;
             do
             {

@@ -43,6 +43,8 @@ namespace HMR_szoftech
             Console.Write("Kinek a foglalását szeretné megtekinteni? ");
             string identityCardNumber = Console.ReadLine();
 
+            int reservationNumber = 0;
+
             Console.WriteLine($"{GuestContainer.getGuestByID(identityCardNumber).getName()} ({identityCardNumber}) foglalásai: ");
             for(int i = 0; i < ReservationContainer.numberOfReservations(); i++)
             {
@@ -50,8 +52,12 @@ namespace HMR_szoftech
                 {
                     Console.Write("-");
                     ReservationContainer.getReservation(i).printDatas();
+                    reservationNumber++;
                 }
             }
+
+            if (reservationNumber == 0)
+                Console.WriteLine("Ennek a felhasználónak nincs foglalása!");
         }
 
         private void back()

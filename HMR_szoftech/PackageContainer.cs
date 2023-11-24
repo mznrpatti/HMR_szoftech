@@ -122,6 +122,11 @@ namespace HMR_szoftech
                         listFlag = true;
                     }
                 }
+
+                if(filterRoom=="nem" && filterDate == "nem")
+                {
+                    listFlag = true;
+                }
             }
 
             if (!listFlag)
