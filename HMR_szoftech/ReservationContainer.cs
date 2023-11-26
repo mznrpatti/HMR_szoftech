@@ -36,6 +36,16 @@ namespace HMR_szoftech
             reservationList.RemoveAt(idx);
         }
 
+        static public void listReservations()
+        {
+            for(int i=0;i<reservationList.Count;i++)
+            {
+                Console.WriteLine(i+1+".: "+reservationList[i].getGuest().getName() + "(" + reservationList[i].getGuest().getIdentityCardNumber() + ") foglalása:");
+                Console.Write("\t");
+                reservationList[i].getPackage().printPackageDatas();
+            }
+        }
+
         static public void readDatas()
         {
             StreamReader sr = new StreamReader("reservations.txt");

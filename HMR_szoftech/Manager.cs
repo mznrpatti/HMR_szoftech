@@ -29,9 +29,9 @@ namespace HMR_szoftech
             } while (option != "1" && option != "2" && option != "3" && option != "4" && option != "5" && option != "6");
             switch (option)
             {
-                case "1": break;
+                case "1": addNewPackage();break;
                 case "2": PackageContainer.listPackages(); back(); break;
-                case "3": break;
+                case "3": deleteReservation(); break;
                 case "4": listReservation(); back(); break;
                 case "5": showBasicDatas(); back(); break;
                 case "6": logout(); break;
@@ -48,8 +48,85 @@ namespace HMR_szoftech
             Console.Write("Nyomja meg az <Enter>-t a visszalépéshez!");
             while (Console.ReadKey().Key != ConsoleKey.Enter) { };
             Console.Clear();
-            recepcionistMenu();
+            managerMenu();
         }
 
+        public void addNewPackage()
+        {
+            Console.Clear();
+            string roomType = "";
+            int numberOfGuests = 0;
+            int packagePrice = 0;
+            string startDate = "";
+            string endDate = "";
+            while (roomType=="" || startDate=="" || endDate=="")
+            {
+                Console.WriteLine("A csomaghoz tartozó adatok: ");
+                Console.Write("Szoba típusa: ");
+                roomType = Console.ReadLine();
+                numberOfGuests = 0;
+                while (numberOfGuests == 0)
+                {
+                    Console.Write("Vendégek száma: ");
+                    try
+                    {
+                        numberOfGuests = Convert.ToInt32(Console.ReadLine());
+                    }
+                    catch
+                    {
+                        Console.WriteLine("A megadott adat nem szám, vagy egyenlő 0-val!");
+                    }
+
+                }
+                packagePrice = 0;
+                while (packagePrice == 0)
+                {
+                    Console.Write("Csomag ára: ");
+                    try
+                    {
+                        packagePrice = Convert.ToInt32(Console.ReadLine());
+                    }
+                    catch
+                    {
+                        Console.WriteLine("A megadott adat nem szám, vagy 0!");
+                    }
+
+                }
+                Console.Write("Kezdeti dátum: ");
+                startDate = Console.ReadLine();
+                Console.Write("Végdátum: ");
+                endDate = Console.ReadLine();
+
+                if (roomType == "" || startDate == "" || endDate == "")
+                    Console.WriteLine("Valamelyik adatot nem töltötte ki helyesen!");
+            }
+
+            Package newPackage = new Package(roomType, numberOfGuests, packagePrice, startDate, endDate);
+            PackageContainer.addPackage(newPackage);
+            PackageContainer.writePackages();
+            Console.Clear();
+            Console.WriteLine("Csomag felvíve az adatbázisba!");
+            System.Threading.Thread.Sleep(3000);
+            managerMenu();
+        }
+
+        public void deleteReservation()
+        {
+            Console.Clear();
+            Console.WriteLine("Foglalások: ");
+            ReservationContainer.listReservations();
+            Console.Write("Adja meg a törölni kívánt foglalás számát: ");
+            int option = 0;
+            do
+            {
+                option = Convert.ToInt32(Console.ReadLine());
+            } while (!(option >= 1 && option <= ReservationContainer.numberOfReservations()));
+            ReservationContainer.deleteReservation(option-1);
+            ReservationContainer.writeReservations();
+            Console.Clear();
+            Console.WriteLine("Foglalás sikeresen törölve!");
+            System.Threading.Thread.Sleep(3000);
+            managerMenu();
+        }
     }
 }
