@@ -40,13 +40,21 @@ namespace HMR_szoftech
         public void listReservation()
         {
             Console.Clear();
-            Console.Write("Kinek a foglalását szeretné megtekinteni? ");
-            string identityCardNumber = Console.ReadLine();
 
             int reservationNumber = 0;
-
+            string identityCardNumber="";
+            bool valid = true;
+            do
+            {
+                valid = true;
+                Console.Write("Kinek a foglalását szeretné megtekinteni? ");
+                identityCardNumber = Console.ReadLine();
+                Guest validator = GuestContainer.getGuestByID(identityCardNumber);
+                if(validator==null)
+                    valid=false;
+            } while (!valid);
             Console.WriteLine($"{GuestContainer.getGuestByID(identityCardNumber).getName()} ({identityCardNumber}) foglalásai: ");
-            for(int i = 0; i < ReservationContainer.numberOfReservations(); i++)
+            for (int i = 0; i < ReservationContainer.numberOfReservations(); i++)
             {
                 if (ReservationContainer.getReservation(i).getGuest().getIdentityCardNumber()==identityCardNumber)
                 {

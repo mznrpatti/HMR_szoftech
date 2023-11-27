@@ -81,21 +81,54 @@ namespace HMR_szoftech
         {
             Console.WriteLine("Üdvözöljük foglalási felületünkön!");
             PackageContainer.listPackages();
-            Console.Write($"Kérjük adja meg a foglalni kívánt csomag számát {1}-{PackageContainer.numberOfPackages()}: ");
             int option=0;
             do
             {
-                option = Convert.ToInt32(Console.ReadLine());
+                try
+                {
+                    Console.Write($"Kérjük adja meg a foglalni kívánt csomag számát {1}-{PackageContainer.numberOfPackages()}: ");
+                    option = Convert.ToInt32(Console.ReadLine());
+                }
+                catch
+                {
+                    Console.WriteLine($"Kérjük érvényes számot adjon meg ({1}-{PackageContainer.numberOfPackages()})!");
+                }
             } while (!(option >= 1 && option <= PackageContainer.numberOfPackages()));
             Console.Clear();
             Console.WriteLine("Tovább a fizetésre!");
             System.Threading.Thread.Sleep(3000);
             Console.Clear();
+            pay(option);
+
+            guestMenu();
+        }
+
+        public void pay(int option)
+        {
             bool successfullPayment = false;
             int tries = 0;
+
+            Console.WriteLine("A válaszott csomag adatai:");
+            PackageContainer.getPackage(option - 1).printPackageDatas();
+            Console.Write("Nyomja meg az <Enter>-t a továbblépéshez!");
+            while (Console.ReadKey().Key != ConsoleKey.Enter) { };
+            Console.Clear();
+
+            bool fineDatas = false;
+            Console.Write("Bankkártyaszám: ");
+            string cardNumber = Console.ReadLine();
+            Console.Write("Bankkártyán szereplő név: ");
+            string nameOnCard = Console.ReadLine();
+            Console.Write("Bankkártya lejárati dátuma: ");
+            string dateOnCard = Console.ReadLine();
+            Console.Write("CVC kód: ");
+            string CVC = Console.ReadLine();
+            if (cardNumber == "1111 2222 3333 4444" && nameOnCard == "Minta Antal" && dateOnCard == "06/26" && CVC == "666")
+                fineDatas = true;
+
             while (successfullPayment == false && tries < 3)
             {
-                if (pay())
+                if (fineDatas)
                 {
                     Console.Clear();
                     Console.WriteLine("Sikeres fizetés és foglalás!");
@@ -128,23 +161,7 @@ namespace HMR_szoftech
                 System.Threading.Thread.Sleep(3000);
             }
 
-            guestMenu();
-        }
-
-        public bool pay()
-        {
-            Console.Write("Bankkártyaszám: ");
-            string cardNumber = Console.ReadLine();
-            Console.Write("Bankkártyán szereplő név: ");
-            string nameOnCard = Console.ReadLine();
-            Console.Write("Bankkártya lejárati dátuma: ");
-            string dateOnCard = Console.ReadLine();
-            Console.Write("CVC kód: ");
-            string CVC = Console.ReadLine();
-            if (cardNumber == "1111 2222 3333 4444" && nameOnCard == "Minta Antal" && dateOnCard == "06/26" && CVC == "666")
-                return true;
-            else
-                return false;
+            
         }
 
         public void listOwnReservations()
@@ -167,10 +184,10 @@ namespace HMR_szoftech
             if (reservations.Count > 0)
             {
                 this.listOwnReservations();
-                int option = 0;
+                int option = -1;
                 do
                 {
-                    Console.Write("Kérjük adja meg a törölni kívánt foglalás számát: ");
+                    Console.Write("Kérjük adja meg a törölni kívánt foglalás számát, vagy írjon 0-t a visszalépéshez: ");
                     try
                     {
                         option = Convert.ToInt32(Console.ReadLine());
@@ -179,17 +196,24 @@ namespace HMR_szoftech
                     {
                         Console.WriteLine("Érvényes számot adjon meg!");
                     }
-                } while (!(option >= 1 && option <=reservations.Count));
-                Package newPackage = reservations[option - 1].getPackage();
-                PackageContainer.addPackage(newPackage);
-                ReservationContainer.deleteReservation(reservations[option - 1]);
-                reservations.RemoveAt(option-1);
-                PackageContainer.writePackages();
-                ReservationContainer.writeReservations();
-                Console.Clear();
-                Console.WriteLine("Foglalás sikeresen törölve!");
-                System.Threading.Thread.Sleep(3000);
-                guestMenu();
+                } while (!(option >=0 && option <=reservations.Count));
+                if (option == 0)
+                {
+                    guestMenu();
+                }
+                else
+                {
+                    Package newPackage = reservations[option - 1].getPackage();
+                    PackageContainer.addPackage(newPackage);
+                    ReservationContainer.deleteReservation(reservations[option - 1]);
+                    reservations.RemoveAt(option - 1);
+                    PackageContainer.writePackages();
+                    ReservationContainer.writeReservations();
+                    Console.Clear();
+                    Console.WriteLine("Foglalás sikeresen törölve!");
+                    System.Threading.Thread.Sleep(3000);
+                    guestMenu();
+                }
             }
             else
             {

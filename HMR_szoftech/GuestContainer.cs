@@ -48,9 +48,9 @@ namespace HMR_szoftech
         static public Guest getGuestByID(string identity)
         {
             Guest find=null;
-            foreach (Guest guest in guestList)
+            for(int i = 0; i < guestList.Count; i++)
             {
-                if (guest.getIdentityCardNumber() == identity) find=guest;
+                if (guestList[i].getIdentityCardNumber() == identity) find = guestList[i];
             }
             return find;
         }

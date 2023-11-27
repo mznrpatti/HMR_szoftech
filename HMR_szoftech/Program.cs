@@ -49,8 +49,14 @@ namespace HMR_szoftech
         {
             Console.Clear();
             Console.WriteLine("Kérjük adja meg a regisztrációhoz szükséges adatait:");
-            Console.Write("Teljes név: ");
-            string name = Console.ReadLine();
+            string name="";
+            do
+            {
+                Console.Write("Teljes név: ");
+                name = Console.ReadLine();
+                if(name=="")
+                    Console.WriteLine("Kérjük adja meg a nevét!");
+            } while (name == "");
             string username;
             bool validName = false;
             do
@@ -74,11 +80,65 @@ namespace HMR_szoftech
                         }
                     }
                 }
+                if (username == "")
+                {
+                    validName = false;
+                    Console.WriteLine("Kérjük adjon meg egy felhasználónevet!");
+                }
             } while (!validName);
-            Console.Write("Jelszó: ");
-            string password = Console.ReadLine();
-            Console.Write("Személyazonosító igazolvány száma: ");
-            string identitycardnumber = Console.ReadLine();
+            string password = "";
+            do
+            {
+                Console.Write("Jelszó: ");
+                password = Console.ReadLine();
+                if (password.Length < 6)
+                    Console.WriteLine("A jelszó túl rövid!");
+            } while (password.Length<6);
+            string identitycardnumber = "";
+            bool valid = false;
+            do
+            {
+                Console.Write("Személyazonosító igazolvány száma: ");
+                identitycardnumber = Console.ReadLine();
+                bool validIdentity = true;
+                bool betu1=false;
+                bool betu2=false;
+                if (identitycardnumber.Length == 8)
+                {
+                    try
+                    {
+                        Convert.ToInt32(identitycardnumber.Substring(0, 6));
+                    }
+                    catch
+                    {
+                        validIdentity = false;
+                    }
+                    betu1 = false;
+                    betu2 = false;
+                    try 
+                    {
+                        Convert.ToInt32(identitycardnumber.Substring(6, 1));
+                    }
+                    catch
+                    {
+                        betu1 = true;
+                    }
+                    try
+                    {
+                        Convert.ToInt32(identitycardnumber.Substring(7, 1));
+                    }
+                    catch
+                    {
+                        betu2 = true;
+                    }
+                }
+
+                if (validIdentity && betu1 && betu2)
+                    valid = true;
+                else
+                    Console.WriteLine("Kérjük adja meg érvényes magyar személyi azonosító számát!");
+
+            } while (!valid);
             int year = -1;
             do
             {
