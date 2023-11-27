@@ -59,10 +59,5 @@ namespace HMR_szoftech
         {
             return rank;
         }
-
-        public void changePassword()
-        {
-            //TODO
-        }
     }
 }
