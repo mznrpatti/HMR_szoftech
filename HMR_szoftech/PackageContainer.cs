@@ -11,14 +11,14 @@ namespace HMR_szoftech
     {
         static private List<Package> packageList = new List<Package>();
 
-        public static int numberOfPackages()
-        {
-            return packageList.Count();
-        }
-
         public static Package getPackage(int idx)
         {
             return packageList[idx];
+        }
+
+        public static int numberOfPackages()
+        {
+            return packageList.Count();
         }
 
         public static void addPackage(Package newPackage)
@@ -131,7 +131,7 @@ namespace HMR_szoftech
 
             if (!listFlag)
             {
-                Console.WriteLine("Sajnáljuk, de nincs a keresésnek megfelelő csomag!");
+                Console.WriteLine("Sajnáljuk, de nincs a keresésnek megfelelő csomag, vagy helytelen keresési adatokat adott meg!");
             }
         }
     }

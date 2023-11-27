@@ -20,6 +20,11 @@ namespace HMR_szoftech
             reservations = new List<Reservation>();
         }
 
+        public string getIdentityCardNumber()
+        {
+            return identityCardNumber;
+        }
+
         public void registration()
         {
             GuestContainer.addGuest(this);
@@ -31,6 +36,11 @@ namespace HMR_szoftech
             output.Close();
         }
 
+        public void login()
+        {
+            guestMenu();
+        }
+
         public void guestMenu()
         {
             Console.Clear();
@@ -38,7 +48,7 @@ namespace HMR_szoftech
             string option;
             do
             {
-                Console.WriteLine("Kérlek válassz a lehetőségek közül (1/2/3/4/5/6):");
+                Console.WriteLine("Kérem válasszon a lehetőségek közül (1/2/3/4/5/6):");
                 Console.WriteLine("1. Elérhető csomagok listázása");
                 Console.WriteLine("2. Foglalás");
                 Console.WriteLine("3. Saját foglalások kilistázása");
@@ -59,11 +69,6 @@ namespace HMR_szoftech
             }
         }
 
-        public void login()
-        {
-            guestMenu();
-        }
-
         private void back()
         {
             Console.Write("Nyomja meg az <Enter>-t a visszalépéshez!");
@@ -76,7 +81,7 @@ namespace HMR_szoftech
         {
             Console.WriteLine("Üdvözöljük foglalási felületünkön!");
             PackageContainer.listPackages();
-            Console.Write($"Kérjük adja meg a foglalni kívánt csomag számát: {1}-{PackageContainer.numberOfPackages()}");
+            Console.Write($"Kérjük adja meg a foglalni kívánt csomag számát {1}-{PackageContainer.numberOfPackages()}: ");
             int option=0;
             do
             {
@@ -142,58 +147,44 @@ namespace HMR_szoftech
                 return false;
         }
 
-        public string getIdentityCardNumber()
-        {
-            return identityCardNumber;
-        }
-
         public void listOwnReservations()
         {
             Console.Clear();
-            bool reservation = false;
-            int db = 1;
-            Console.WriteLine("Az Ön foglalásai: ");
-            for(int i = 0; i < ReservationContainer.numberOfReservations(); i++)
-            {
-                if (ReservationContainer.getReservation(i).getGuest().getIdentityCardNumber() == this.identityCardNumber)
-                {
-                    Console.Write($"{db}.: ");
-                    ReservationContainer.getReservation(i).printDatas();
-                    reservation = true;
-                    db++;
-                }
-            }
 
-            if (!reservation)
-                Console.WriteLine("Önnek nincs foglalása!");
-        }
-
-        public int getNumberOfOwnReservations()
-        {
-            int db = 0;
-            for (int i = 0; i < ReservationContainer.numberOfReservations(); i++)
+            if (reservations.Count == 0)
             {
-                if (ReservationContainer.getReservation(i).getGuest().getIdentityCardNumber() == this.identityCardNumber)
-                    db++;
+                Console.WriteLine("Önnek még nincs foglalása!");
             }
-            return db;
+            for (int i = 0; i < reservations.Count; i++)
+            {
+                Console.Write($"{i+1}.: ");
+                reservations[i].printDatas();
+            }
         }
 
         public void deleteReservation()
         {
-            if (getNumberOfOwnReservations() > 0)
+            if (reservations.Count > 0)
             {
                 this.listOwnReservations();
-                Console.Write("Kérjük adja meg a törölni kívánt foglalás számát: ");
                 int option = 0;
                 do
                 {
-                    option = Convert.ToInt32(Console.ReadLine());
-                } while (!(option >= 1 && option <= getNumberOfOwnReservations()));
-                Package newPackage = ReservationContainer.getPackageFromReservation(option-1);
+                    Console.Write("Kérjük adja meg a törölni kívánt foglalás számát: ");
+                    try
+                    {
+                        option = Convert.ToInt32(Console.ReadLine());
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Érvényes számot adjon meg!");
+                    }
+                } while (!(option >= 1 && option <=reservations.Count));
+                Package newPackage = reservations[option - 1].getPackage();
                 PackageContainer.addPackage(newPackage);
+                ReservationContainer.deleteReservation(reservations[option - 1]);
+                reservations.RemoveAt(option-1);
                 PackageContainer.writePackages();
-                ReservationContainer.deleteReservation(option - 1);
                 ReservationContainer.writeReservations();
                 Console.Clear();
                 Console.WriteLine("Foglalás sikeresen törölve!");
@@ -202,11 +193,21 @@ namespace HMR_szoftech
             }
             else
             {
+                Console.Clear();
                 Console.WriteLine("Önnek nincs foglalása, amit törölhetne!");
+                System.Threading.Thread.Sleep(3000);
+                guestMenu();
             }
-            
+        }
 
-            Console.ReadKey();
+        public void deleteReservation(Reservation delete)
+        {
+            reservations.Remove(delete);
+        }
+
+        public void addReservation(Reservation reservation)
+        {
+            reservations.Add(reservation);
         }
     }
 }

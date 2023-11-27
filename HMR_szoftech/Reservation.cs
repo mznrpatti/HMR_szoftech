@@ -19,6 +19,11 @@ namespace HMR_szoftech
             this.date = date;
         }
 
+        public string getDate()
+        {
+            return date;
+        }
+
         public Guest getGuest()
         {
             return guest;

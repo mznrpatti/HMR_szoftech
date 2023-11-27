@@ -31,9 +31,15 @@ namespace HMR_szoftech
             reservationList.Add(newReservation);
         }
 
-        static public void deleteReservation(int idx)
+        static public void deleteReservation(Reservation delete)
         {
-            reservationList.RemoveAt(idx);
+            for(int i=0;i<reservationList.Count;i++)
+            {
+                if (reservationList[i].getGuest()==delete.getGuest() && reservationList[i].getPackage()==delete.getPackage() && reservationList[i].getDate() == delete.getDate())
+                {
+                    reservationList.RemoveAt(i);
+                }
+            }
         }
 
         static public void listReservations()
@@ -51,7 +57,6 @@ namespace HMR_szoftech
             StreamReader sr = new StreamReader("reservations.txt");
             string sor;
             string[] adatok;
-            Reservation newReservation;
             while (!sr.EndOfStream)
             {
                 sor = sr.ReadLine();
@@ -65,6 +70,7 @@ namespace HMR_szoftech
                 Guest guest = GuestContainer.getGuestByID(adatok[0]);
                 string date=Convert.ToString(newPackage.getStartDate()+"-"+newPackage.getEndDate());
                 addReservation(new Reservation(newPackage, guest, date));
+                guest.addReservation(new Reservation(newPackage, guest, date));
             }
             sr.Close();
         }

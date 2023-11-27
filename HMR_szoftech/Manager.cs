@@ -10,6 +10,11 @@ namespace HMR_szoftech
     {
         public Manager(string userName, string name, string rank): base(userName, name, rank) {}
 
+        public void login()
+        {
+            managerMenu();
+        }
+
         public void managerMenu()
         {
             Console.Clear();
@@ -36,11 +41,6 @@ namespace HMR_szoftech
                 case "5": showBasicDatas(); back(); break;
                 case "6": logout(); break;
             }
-        }
-
-        public void login()
-        {
-            managerMenu();
         }
 
         private void back()
@@ -121,8 +121,12 @@ namespace HMR_szoftech
             {
                 option = Convert.ToInt32(Console.ReadLine());
             } while (!(option >= 1 && option <= ReservationContainer.numberOfReservations()));
-            ReservationContainer.deleteReservation(option-1);
+            Package newPackage = ReservationContainer.getReservation(option - 1).getPackage();
+            PackageContainer.addPackage(newPackage);
+            ReservationContainer.getReservation(option - 1).getGuest().deleteReservation(ReservationContainer.getReservation(option - 1));
+            ReservationContainer.deleteReservation(ReservationContainer.getReservation(option-1));
             ReservationContainer.writeReservations();
+            PackageContainer.writePackages();
             Console.Clear();
             Console.WriteLine("Foglalás sikeresen törölve!");
             System.Threading.Thread.Sleep(3000);

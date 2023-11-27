@@ -30,7 +30,7 @@ namespace HMR_szoftech
             string option;
             do
             {
-                Console.WriteLine("Kérlek válassz a lehetőségek közül (1/2/3):");
+                Console.WriteLine("Kérem válasszon a lehetőségek közül (1/2/3):");
                 Console.WriteLine("1. Bejelentkezés");
                 Console.WriteLine("2. Regisztráció");
                 Console.WriteLine("3. Nézelődés látogatóként");
@@ -45,104 +45,36 @@ namespace HMR_szoftech
             }
         }
 
-        static public void login()
-        {
-            Console.Clear();
-            Console.Write("Felhasználónév: ");
-            string userName=Console.ReadLine();
-            Console.Write("Jelszó: ");
-            string password = Console.ReadLine();
-            if (userName == "admin")
-            {
-                StreamReader sr = new StreamReader("adminlogin.txt");
-                if (password == sr.ReadLine())
-                    admin.login();
-                else
-                {
-                    Console.Clear();
-                    Console.WriteLine("Helytelen felhasználónév vagy jelszó!");
-                    System.Threading.Thread.Sleep(3000);
-                    login();
-                }
-                sr.Close();
-            }
-            else if (userName == "recepcionist")
-            {
-                StreamReader sr = new StreamReader("recepcionistlogin.txt");
-                if (password == sr.ReadLine())
-                    recepcionist.login();
-                else
-                {
-                    Console.Clear();
-                    Console.WriteLine("Helytelen felhasználónév vagy jelszó!");
-                    System.Threading.Thread.Sleep(3000);
-                    login();
-                }
-                sr.Close();
-            }
-            else
-            {
-                bool log = false;
-                for (int i=0;i<GuestContainer.numberOfGuests(); i++)
-                {
-                    if (GuestContainer.getGuest(i).getUserName() == userName)
-                    {
-                        
-                        StreamReader sr = new StreamReader("logindatas.txt");
-                        bool success = false;
-                        while (!sr.EndOfStream)
-                        {
-                            string[] logindatas = (sr.ReadLine()).Split(';');
-                            if (logindatas[1] == password)
-                            {
-                                success = true;
-                                break;
-                            }
-                        }
-                        sr.Close();
-                        if (success)
-                        {
-                            log=true;
-                            GuestContainer.getGuest(i).login();
-                        }
-                        else
-                        {
-                            Console.Clear();
-                            Console.WriteLine("Helytelen felhasználónév vagy jelszó!");
-                            System.Threading.Thread.Sleep(3000);
-                            login();
-                        }
-                    }
-                }
-                if (!log)
-                {
-                    Console.Clear();
-                    Console.WriteLine("Helytelen felhasználónév vagy jelszó!");
-                    System.Threading.Thread.Sleep(3000);
-                    login();
-                }
-            }
-        }
-
-        static private bool birthDateChecker(DateTime birthdate)
-        {
-            DateTime current = DateTime.Now;
-            if (birthdate.Year < current.Year - 18 || (birthdate.Year == current.Year - 18 && birthdate.Month < current.Month) || (birthdate.Year == current.Year - 18 && birthdate.Month == current.Month && birthdate.Day <= current.Day))
-            {
-                return true;
-            }
-            return false;
-
-        }
-
         static public void registration()
         {
             Console.Clear();
             Console.WriteLine("Kérjük adja meg a regisztrációhoz szükséges adatait:");
             Console.Write("Teljes név: ");
-            string name=Console.ReadLine();
-            Console.Write("Felhasználónév: ");
-            string username = Console.ReadLine();
+            string name = Console.ReadLine();
+            string username;
+            bool validName = false;
+            do
+            {
+                Console.Write("Felhasználónév: ");
+                username = Console.ReadLine();
+                validName = true;
+                if (username == "admin" || username == "recepcionist")
+                {
+                    validName = false;
+                    Console.WriteLine("Ez a felhasználónév már foglalt vagy nem engedélyezett. Kérjük adjon meg másikat!");
+                }
+                else
+                {
+                    for (int i = 0; i < GuestContainer.numberOfGuests(); i++)
+                    {
+                        if (GuestContainer.getGuest(i).getUserName() == username)
+                        {
+                            validName = false;
+                            Console.WriteLine("Ez a felhasználónév már foglalt vagy nem engedélyezett. Kérjük adjon meg másikat!");
+                        }
+                    }
+                }
+            } while (!validName);
             Console.Write("Jelszó: ");
             string password = Console.ReadLine();
             Console.Write("Személyazonosító igazolvány száma: ");
@@ -158,8 +90,8 @@ namespace HMR_szoftech
                 catch
                 {
                     Console.WriteLine("Kérlek érvényes születési évet adj meg!");
-                }  
-            } while (year==-1);
+                }
+            } while (year == -1);
             int month = -1;
             do
             {
@@ -209,9 +141,99 @@ namespace HMR_szoftech
                 Console.Clear();
                 Console.WriteLine("Sikertelen regisztráció! Nem töltötte be a 18. életévét!");
                 Console.Write("Nyomja meg az <Enter>-t a továbblépéshez!");
-                
+                while (Console.ReadKey().Key != ConsoleKey.Enter) { };
                 Console.Clear();
                 begin();
+            }
+        }
+
+        static private bool birthDateChecker(DateTime birthdate)
+        {
+            DateTime current = DateTime.Now;
+            if (birthdate.Year < current.Year - 18 || (birthdate.Year == current.Year - 18 && birthdate.Month < current.Month) || (birthdate.Year == current.Year - 18 && birthdate.Month == current.Month && birthdate.Day <= current.Day))
+            {
+                return true;
+            }
+            return false;
+
+        }
+
+        static public void login()
+        {
+            Console.Clear();
+            Console.Write("Felhasználónév: ");
+            string userName=Console.ReadLine();
+            Console.Write("Jelszó: ");
+            string password = Console.ReadLine();
+            if (userName == "admin")
+            {
+                StreamReader sr = new StreamReader("adminlogin.txt");
+                if (password == sr.ReadLine())
+                    admin.login();
+                else
+                {
+                    Console.Clear();
+                    Console.WriteLine("Helytelen felhasználónév vagy jelszó!");
+                    System.Threading.Thread.Sleep(3000);
+                    begin();
+                }
+                sr.Close();
+            }
+            else if (userName == "recepcionist")
+            {
+                StreamReader sr = new StreamReader("recepcionistlogin.txt");
+                if (password == sr.ReadLine())
+                    recepcionist.login();
+                else
+                {
+                    Console.Clear();
+                    Console.WriteLine("Helytelen felhasználónév vagy jelszó!");
+                    System.Threading.Thread.Sleep(3000);
+                    begin();
+                }
+                sr.Close();
+            }
+            else
+            {
+                bool log = false;
+                for (int i=0;i<GuestContainer.numberOfGuests(); i++)
+                {
+                    if (GuestContainer.getGuest(i).getUserName() == userName)
+                    {
+                        
+                        StreamReader sr = new StreamReader("logindatas.txt");
+                        bool success = false;
+                        while (!sr.EndOfStream)
+                        {
+                            string[] logindatas = (sr.ReadLine()).Split(';');
+                            if (logindatas[1] == password)
+                            {
+                                success = true;
+                                break;
+                            }
+                        }
+                        sr.Close();
+                        if (success)
+                        {
+                            log=true;
+                            GuestContainer.getGuest(i).login();
+                        }
+                        else
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Helytelen felhasználónév vagy jelszó!");
+                            System.Threading.Thread.Sleep(3000);
+                            begin();
+                        }
+                    }
+                }
+                if (!log)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Helytelen felhasználónév vagy jelszó!");
+                    System.Threading.Thread.Sleep(3000);
+                    begin();
+                }
             }
         }
 
@@ -222,7 +244,7 @@ namespace HMR_szoftech
             string option;
             do
             {
-                Console.WriteLine("Kérlek válasszon a lehetőségek közül (1/2/3/4):");
+                Console.WriteLine("Kérem válasszon a lehetőségek közül (1/2/3/4):");
                 Console.WriteLine("1. Alapadatok megtekintése");
                 Console.WriteLine("2. Elérhető csomagok listázása");
                 Console.WriteLine("3. Regisztráció");
