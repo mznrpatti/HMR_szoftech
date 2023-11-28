@@ -30,18 +30,20 @@ namespace HMR_szoftech
             string option;
             do
             {
-                Console.WriteLine("Kérem válasszon a lehetőségek közül (1/2/3):");
+                Console.WriteLine("Kérem válasszon a lehetőségek közül (1/2/3/4):");
                 Console.WriteLine("1. Bejelentkezés");
                 Console.WriteLine("2. Regisztráció");
                 Console.WriteLine("3. Nézelődés látogatóként");
+                Console.WriteLine("4. Kilépés a programból");
                 option = Convert.ToString(Console.ReadLine());
                 
-            } while (option != "1" && option!= "2" && option!="3");
+            } while (option != "1" && option!= "2" && option!="3" && option!="4");
             switch (option)
             {
                 case "1": login(); break;
                 case "2": registration(); break;
                 case "3": visitor(); break;
+                case "4": Environment.Exit(0); break;
             }
         }
 
@@ -139,46 +141,60 @@ namespace HMR_szoftech
                     Console.WriteLine("Kérjük adja meg érvényes magyar személyi azonosító számát!");
 
             } while (!valid);
-            int year = -1;
+            bool validBirthDate = true;
+            DateTime birthdate=new DateTime();
             do
             {
-                Console.Write("Születési év: ");
+                validBirthDate = true;
+                int year = -1;
+                do
+                {
+                    Console.Write("Születési év: ");
+                    try
+                    {
+                        year = Convert.ToInt32(Console.ReadLine());
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Kérlek érvényes születési évet adj meg!");
+                    }
+                } while (year == -1);
+                int month = -1;
+                do
+                {
+                    Console.Write("Születési hónap: ");
+                    try
+                    {
+                        month = Convert.ToInt32(Console.ReadLine());
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Kérlek érvényes születési hónapot adj meg!");
+                    }
+                } while (month == -1);
+                int day = -1;
+                do
+                {
+                    Console.Write("Születési nap: ");
+                    try
+                    {
+                        day = Convert.ToInt32(Console.ReadLine());
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Kérlek érvényes születési napot adj meg!");
+                    }
+                } while (day == -1);
                 try
                 {
-                    year = Convert.ToInt32(Console.ReadLine());
+                    birthdate = new DateTime(year, month, day);
                 }
                 catch
                 {
-                    Console.WriteLine("Kérlek érvényes születési évet adj meg!");
-                }
-            } while (year == -1);
-            int month = -1;
-            do
-            {
-                Console.Write("Születési hónap: ");
-                try
-                {
-                    month = Convert.ToInt32(Console.ReadLine());
-                }
-                catch
-                {
-                    Console.WriteLine("Kérlek érvényes születési hónapot adj meg!");
-                }
-            } while (month == -1);
-            int day = -1;
-            do
-            {
-                Console.Write("Születési nap: ");
-                try
-                {
-                    day = Convert.ToInt32(Console.ReadLine());
-                }
-                catch
-                {
-                    Console.WriteLine("Kérlek érvényes születési napot adj meg!");
-                }
-            } while (day == -1);
-            DateTime birthdate = new DateTime(year, month, day);
+                    Console.WriteLine("Kérjük az érvényes születési dátumát adja meg!");
+                    validBirthDate = false;
+                } 
+            } while (!validBirthDate);
             if (birthDateChecker(birthdate))
             {
                 Guest newGuest = new Guest(username, name, "guest", identitycardnumber, birthdate);

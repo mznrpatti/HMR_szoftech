@@ -46,7 +46,7 @@ namespace HMR_szoftech
             }
         }
 
-        private void back()
+        public override void back()
         {
             Console.Write("Nyomja meg az <Enter>-t a visszalépéshez!");
             while (Console.ReadKey().Key != ConsoleKey.Enter) { };
@@ -165,13 +165,26 @@ namespace HMR_szoftech
                     Console.WriteLine("Érvénytelen dátumot adott meg!");
             }
 
-            Package newPackage = new Package(roomType, numberOfGuests, packagePrice, startDate, endDate);
-            PackageContainer.addPackage(newPackage);
-            PackageContainer.writePackages();
-            Console.Clear();
-            Console.WriteLine("Csomag felvíve az adatbázisba!");
-            System.Threading.Thread.Sleep(3000);
-            managerMenu();
+            string validatorString = "";
+            do
+            {
+                Console.Write("\nBiztosan fel szeretné vinni a csomagot az adatbázisba (igen/nem)? ");
+                validatorString = Console.ReadLine();
+            } while (validatorString != "nem" && validatorString != "igen");
+            if (validatorString == "igen")
+            {
+                Package newPackage = new Package(roomType, numberOfGuests, packagePrice, startDate, endDate);
+                PackageContainer.addPackage(newPackage);
+                PackageContainer.writePackages();
+                Console.Clear();
+                Console.WriteLine("Csomag felvíve az adatbázisba!");
+                System.Threading.Thread.Sleep(3000);
+                managerMenu();
+            }
+            else
+            {
+                managerMenu();
+            }
         }
 
         public void deletePackage()

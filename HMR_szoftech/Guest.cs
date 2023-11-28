@@ -81,26 +81,33 @@ namespace HMR_szoftech
         {
             Console.WriteLine("Üdvözöljük foglalási felületünkön!");
             PackageContainer.listPackages();
-            int option=0;
+            int option=-1;
             do
             {
                 try
                 {
-                    Console.Write($"Kérjük adja meg a foglalni kívánt csomag számát {1}-{PackageContainer.numberOfPackages()}: ");
+                    Console.Write($"Kérjük adja meg a foglalni kívánt csomag számát {1}-{PackageContainer.numberOfPackages()}, vagy adjon meg 0-t a visszalépéshez: ");
                     option = Convert.ToInt32(Console.ReadLine());
                 }
                 catch
                 {
                     Console.WriteLine($"Kérjük érvényes számot adjon meg ({1}-{PackageContainer.numberOfPackages()})!");
                 }
-            } while (!(option >= 1 && option <= PackageContainer.numberOfPackages()));
-            Console.Clear();
-            Console.WriteLine("Tovább a fizetésre!");
-            System.Threading.Thread.Sleep(3000);
-            Console.Clear();
-            pay(option);
+            } while (!(option >= 0 && option <= PackageContainer.numberOfPackages()));
+            if (option == 0)
+            {
+                guestMenu();
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("Tovább a fizetésre!");
+                System.Threading.Thread.Sleep(3000);
+                Console.Clear();
+                pay(option);
 
-            guestMenu();
+                guestMenu();
+            }   
         }
 
         public void pay(int option)
@@ -114,20 +121,19 @@ namespace HMR_szoftech
             while (Console.ReadKey().Key != ConsoleKey.Enter) { };
             Console.Clear();
 
-            bool fineDatas = false;
-            Console.Write("Bankkártyaszám: ");
-            string cardNumber = Console.ReadLine();
-            Console.Write("Bankkártyán szereplő név: ");
-            string nameOnCard = Console.ReadLine();
-            Console.Write("Bankkártya lejárati dátuma: ");
-            string dateOnCard = Console.ReadLine();
-            Console.Write("CVC kód: ");
-            string CVC = Console.ReadLine();
-            if (cardNumber == "1111 2222 3333 4444" && nameOnCard == "Minta Antal" && dateOnCard == "06/26" && CVC == "666")
-                fineDatas = true;
-
             while (successfullPayment == false && tries < 3)
             {
+                bool fineDatas = false;
+                Console.Write("Bankkártyaszám: ");
+                string cardNumber = Console.ReadLine();
+                Console.Write("Bankkártyán szereplő név: ");
+                string nameOnCard = Console.ReadLine();
+                Console.Write("Bankkártya lejárati dátuma: ");
+                string dateOnCard = Console.ReadLine();
+                Console.Write("CVC kód: ");
+                string CVC = Console.ReadLine();
+                if (cardNumber == "1111 2222 3333 4444" && nameOnCard == "Minta Antal" && dateOnCard == "06/26" && CVC == "666")
+                    fineDatas = true;
                 if (fineDatas)
                 {
                     Console.Clear();

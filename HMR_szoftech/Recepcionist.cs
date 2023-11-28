@@ -47,11 +47,18 @@ namespace HMR_szoftech
             do
             {
                 valid = true;
-                Console.Write("Kinek a foglalását szeretné megtekinteni? ");
+                Console.Write("Kinek a foglalását szeretné megtekinteni (kilépéshez írja be: exit)? ");
                 identityCardNumber = Console.ReadLine();
-                Guest validator = GuestContainer.getGuestByID(identityCardNumber);
-                if(validator==null)
-                    valid=false;
+                if (identityCardNumber == "exit")
+                {
+                    this.back();
+                }
+                else
+                {
+                    Guest validator = GuestContainer.getGuestByID(identityCardNumber);
+                    if (validator == null)
+                        valid = false;
+                }
             } while (!valid);
             Console.WriteLine($"{GuestContainer.getGuestByID(identityCardNumber).getName()} ({identityCardNumber}) foglalásai: ");
             for (int i = 0; i < ReservationContainer.numberOfReservations(); i++)
@@ -68,7 +75,7 @@ namespace HMR_szoftech
                 Console.WriteLine("Ennek a felhasználónak nincs foglalása!");
         }
 
-        private void back()
+        public virtual void back()
         {
             Console.Write("Nyomja meg az <Enter>-t a visszalépéshez!");
             while (Console.ReadKey().Key != ConsoleKey.Enter) { };
